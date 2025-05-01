@@ -1,6 +1,24 @@
 const express = require("express");
+const morgan = require("morgan");
+
 const app = express();
 app.use(express.json());
+
+morgan.token("infoSent", function (req, res) {
+  return JSON.stringify(req.body);
+});
+
+app.use(morgan((tokens, req, res) => {
+  let log = [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms'
+  ]
+  if (tokens.method(req, res) === "POST") {log.push(tokens.infoSent(req, res))}
+  return log.join(" ")
+}))
 
 let persons = [
   {
@@ -24,6 +42,10 @@ let persons = [
     number: "39-23-6423122",
   },
 ];
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
 
 const generateId = () => Math.round(Math.random() * 100000000);
 
@@ -76,6 +98,8 @@ app.get("/info", (req, res) => {
   } people<br/>${new Date()}</p>`;
   res.send(info);
 });
+
+app.use(unknownEndpoint);
 
 const port = 3001;
 app.listen(port, () => {
