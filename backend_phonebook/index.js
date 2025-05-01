@@ -104,7 +104,7 @@ app.get("/info", (req, res) => {
 
 app.use(unknownEndpoint);
 
-const port = 3001;
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });

@@ -1,0 +1,25 @@
+# fly.toml app configuration file generated for backend-phonebook-broken-leaf-7178 on 2025-05-01T23:14:35+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'backend-phonebook-broken-leaf-7178'
+primary_region = 'mad'
+
+[build]
+
+[env]
+  PORT = "3000"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
